@@ -23,7 +23,7 @@ class ValidateRushInfoTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "20/10/2021, false", "20/12/2021, true", "12/2021, false", "11/12/2021, false" })
+	@CsvSource({ "2021-10-20, false", "2021-12-30, true", "2021-12, false", ", false" })
 	void testValidateDeliveryDate(String deliveryDate, boolean expected) {
 		boolean isValid = placeRushOrderController.validateDeliveryDate(deliveryDate);
 
@@ -31,9 +31,9 @@ class ValidateRushInfoTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "Hai Bà Trưng, false", "Đắk Lắk, true", "Thừa Thiên-Huế, true", ", false" })
-	void testValidateProvince(String province, boolean expected) {
-		boolean isValid = placeRushOrderController.validateProvince(province);
+	@CsvSource({ "Shopee Ship, true", "Loship, false", "Gojek Ship, true", ", false" })
+	void testValidateSupplier(String supplier, boolean expected) {
+		boolean isValid = placeRushOrderController.validateSupplier(supplier);
 		
 		assertEquals(expected, isValid);
 	}

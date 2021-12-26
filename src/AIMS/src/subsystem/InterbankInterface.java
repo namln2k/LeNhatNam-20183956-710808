@@ -3,6 +3,7 @@ package subsystem;
 import common.exception.PaymentException;
 import common.exception.UnrecognizedException;
 import entity.payment.CreditCard;
+import entity.payment.DebitCard;
 import entity.payment.PaymentTransaction;
 
 /**
@@ -13,6 +14,36 @@ import entity.payment.PaymentTransaction;
  * 
  */
 public interface InterbankInterface {
+
+	/**
+	 * Pay order, and then return the payment transaction
+	 * 
+	 * @param card     - the debit card used for payment
+	 * @param amount   - the amount to pay
+	 * @param contents - the transaction contents
+	 * @return {@link entity.payment.PaymentTransaction PaymentTransaction} - if the
+	 *         payment is successful
+	 * @throws PaymentException      if responded with a pre-defined error code
+	 * @throws UnrecognizedException if responded with an unknown error code or
+	 *                               something goes wrong
+	 */
+	public abstract PaymentTransaction payOrder(DebitCard card, int amount, String contents)
+			throws PaymentException, UnrecognizedException;
+
+	/**
+	 * Refund, and then return the payment transaction
+	 * 
+	 * @param card     - the debit card which would be refunded to
+	 * @param amount   - the amount to refund
+	 * @param contents - the transaction contents
+	 * @return {@link entity.payment.PaymentTransaction PaymentTransaction} - if the
+	 *         payment is successful
+	 * @throws PaymentException      if responded with a pre-defined error code
+	 * @throws UnrecognizedException if responded with an unknown error code or
+	 *                               something goes wrong
+	 */
+	public abstract PaymentTransaction refund(DebitCard card, int amount, String contents)
+			throws PaymentException, UnrecognizedException;
 
 	/**
 	 * Pay order, and then return the payment transaction
@@ -45,3 +76,6 @@ public interface InterbankInterface {
 			throws PaymentException, UnrecognizedException;
 
 }
+
+
+

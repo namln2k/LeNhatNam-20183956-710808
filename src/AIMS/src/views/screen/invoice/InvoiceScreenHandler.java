@@ -44,10 +44,19 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
 	private Label instructions;
 
 	@FXML
+	private Label supplier;
+
+	@FXML
+	private Label deliveryDate;
+
+	@FXML
 	private Label subtotal;
 
 	@FXML
 	private Label shippingFees;
+
+	@FXML
+	private Label additionalFees;
 
 	@FXML
 	private Label total;
@@ -65,13 +74,28 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
 
 	private void setInvoiceInfo(){
 		HashMap<String, String> deliveryInfo = invoice.getOrder().getDeliveryInfo();
+		HashMap<String, String> rushInfo = invoice.getOrder().getRushInfo();
+		
 		name.setText(deliveryInfo.get("name"));
 		province.setText(deliveryInfo.get("province"));
+		phone.setText(deliveryInfo.get("phone"));
 		instructions.setText(deliveryInfo.get("instructions"));
 		address.setText(deliveryInfo.get("address"));
+		
 		subtotal.setText(Utils.getCurrencyFormat(invoice.getOrder().getAmount()));
 		shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
-		int amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
+		
+
+		int amount;
+		if (rushInfo != null) {
+			supplier.setText(rushInfo.get("supplier"));
+			deliveryDate.setText(rushInfo.get("deliveryDate"));
+			
+			additionalFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getAdditionalFees()));
+			amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees() + invoice.getOrder().getAdditionalFees();
+		} else {
+			amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
+		}
 		total.setText(Utils.getCurrencyFormat(amount));
 		invoice.setAmount(amount);
 		invoice.getOrder().getlstOrderMedia().forEach(orderMedia -> {

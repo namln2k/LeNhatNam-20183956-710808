@@ -40,6 +40,7 @@ public class Configs {
 	// static resource
 	public static final String IMAGE_PATH = "assets/images";
 	public static final String INVOICE_SCREEN_PATH = "/views/fxml/invoice.fxml";
+	public static final String RUSH_INFO_SCREEN_PATH = "/views/fxml/rush_info.fxml";
 	public static final String INVOICE_MEDIA_SCREEN_PATH = "/views/fxml/media_invoice.fxml";
 	public static final String PAYMENT_SCREEN_PATH = "/views/fxml/payment.fxml";
 	public static final String RESULT_SCREEN_PATH = "/views/fxml/result.fxml";
@@ -59,6 +60,8 @@ public class Configs {
 			"Phú Yên", "Quảng Nam", "Quảng Ngãi", "Đà Nẵng", "Bà Rịa-Vũng Tàu", "Bình Dương", "Bình Phước", "Đồng Nai",
 			"Tây Ninh", "Hồ Chí Minh", "An Giang", "Bạc Liêu", "Bến Tre", "Cà Mau", "Đồng Tháp", "Hậu Giang",
 			"Kiên Giang", "Long An", "Sóc Trăng", "Tiền Giang", "Trà Vinh", "Vĩnh Long", "Cần Thơ" };
+
+	public static String[] SUPPLIERS = { "Shopee Ship", "Lazada Ship", "Gojek Ship", "Baemin Ship" };
 
 	public static Font REGULAR_FONT = Font.font("Segoe UI", FontWeight.NORMAL, FontPosture.REGULAR, 24);
 }

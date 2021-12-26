@@ -3,17 +3,14 @@ package controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import entity.cart.Cart;
 import entity.cart.CartMedia;
-import common.exception.InvalidDeliveryInfoException;
 import entity.invoice.Invoice;
 import entity.order.Order;
 import entity.order.OrderMedia;
-import views.screen.popup.PopupScreen;
+import entity.shipping.RushInfo;
 
 /**
  * This class controls the flow of place order usecase in our AIMS project
@@ -55,6 +52,16 @@ public class PlaceOrderController extends BaseController {
 	}
 
 	/**
+	 * This method creates the new RushInfo based on order
+	 * 
+	 * @param order
+	 * @return Invoice
+	 */
+	public RushInfo createRushInfo(Order order) {
+		return new RushInfo(order);
+	}
+
+	/**
 	 * This method creates the new Invoice based on order
 	 * 
 	 * @param order
@@ -63,7 +70,7 @@ public class PlaceOrderController extends BaseController {
 	public Invoice createInvoice(Order order) {
 		return new Invoice(order);
 	}
-
+	
 	/**
 	 * This method takes responsibility for processing the shipping info from user
 	 * 
@@ -85,11 +92,11 @@ public class PlaceOrderController extends BaseController {
 	 * @throws IOException
 	 */
 	public void validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
-		if (!validatePhoneNumber(info.get("phoneNumber")))
+		if (!validatePhoneNumber(info.get("phone")))
 			throw new InterruptedException("Số điện thoại không hợp lệ!");
 		if (!validateName(info.get("name")))
 			throw new InterruptedException("Tên không hợp lệ!");
-		if (!validateAddress(info.get("addess")))
+		if (!validateAddress(info.get("address")))
 			throw new InterruptedException("Địa chỉ giao hàng không hợp lệ!");
 	}
 
@@ -141,6 +148,11 @@ public class PlaceOrderController extends BaseController {
 			return true;
 		return false;
 	}
+	
+	/**
+	 * Đối tượng cung cấp phương thức tính phí ship cho đơn hàng
+	 */
+	private ShippingFeesInterface shippingFeesCalculator;
 
 	/**
 	 * This method calculates the shipping fees of order
@@ -149,9 +161,12 @@ public class PlaceOrderController extends BaseController {
 	 * @return shippingFee
 	 */
 	public int calculateShippingFee(Order order) {
-		Random rand = new Random();
-		int fees = (int) (((rand.nextFloat() * 10) / 100) * order.getAmount());
-		LOGGER.info("Order Amount: " + order.getAmount() + " -- Shipping Fees: " + fees);
-		return fees;
+		this.shippingFeesCalculator = new ShippingFeesController();
+		return shippingFeesCalculator.calculateShippingFees(order);
 	}
 }
+
+
+
+
+

@@ -1,28 +1,35 @@
 package controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import entity.order.Order;
+import entity.shipping.RushInfo;
 import utils.Configs;
 
-/**
- * Class controller cho use case place rush order
- * 
- * @author NAM.LN183956
- *
- */
-public class PlaceRushOrderController extends BaseController {
+public class PlaceRushOrderController extends PlaceOrderController {
 
 	/**
-	 * Hiển thị form điền thông tin cho rush order
-	 * 
+	 * Just for logging purpose
 	 */
-	public void displayRushInfoForm() {
+	private static Logger LOGGER = utils.Utils.getLogger(PlaceOrderController.class.getName());
+
+	/**
+	 * This method takes responsibility for processing the shipping info from user
+	 * 
+	 * @param info
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public void processRushInfo(HashMap info) throws InterruptedException, IOException {
+		LOGGER.info("Process Delivery Info");
+		LOGGER.info(info.toString());
+		validateRushInfo(info);
 	}
 
 	/**
@@ -33,30 +40,9 @@ public class PlaceRushOrderController extends BaseController {
 	 * @author NAM.LN183956
 	 */
 	public void validateRushInfo(HashMap<String, String> info) throws InterruptedException {
-		if (!validateDeliveryDate(info.get("date"))) {
+		if (!validateDeliveryDate(info.get("deliveryDate"))) {
 			throw new InterruptedException("Ngày giao hàng không hợp lệ");
 		}
-	}
-
-	/**
-	 * Kiểm tra thông tin ngày giao hàng có hợp lệ không
-	 * 
-	 * @param deliveryDate: ngày giao hàng mà khách mong muốn
-	 * @return true nếu ngày giao hàng có định dạng hợp lệ, và phải sau ngày hôm
-	 *         nay. Ngược lại return false
-	 * @author NAM.LN183956
-	 */
-	public boolean validateDeliveryDate(String deliveryDate) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		boolean isValid;
-		try {
-			// So sánh ngày giao hàng mong muốn với ngày hôm nay
-			Date date = dateFormat.parse(deliveryDate.trim());
-			isValid = validateDeliveryDate(date);
-		} catch (ParseException ex) {
-			return false;
-		}
-		return isValid;
 	}
 
 	/**
@@ -71,41 +57,49 @@ public class PlaceRushOrderController extends BaseController {
 	}
 
 	/**
-	 * Kiểm tra ngày giao hàng có hợp lệ không
+	 * Kiểm tra thông tin ngày giao hàng có hợp lệ không
 	 * 
-	 * @param deliveryDate: ngày giao hàng mong muốn (Kiểu LocalDate)
-	 * @return true nếu ngày giao hàng là sau ngày hôm nay
+	 * @param deliveryDate: ngày giao hàng mà khách mong muốn
+	 * @return true nếu ngày giao hàng có định dạng hợp lệ, và phải sau ngày hôm
+	 *         nay. Ngược lại return false
 	 * @author NAM.LN183956
 	 */
-	public boolean validateDeliveryDate(LocalDate deliveryDate) {
-		return deliveryDate.isAfter(LocalDate.now());
+	public boolean validateDeliveryDate(String deliveryDate) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		boolean isValid;
+		try {
+			// So sánh ngày giao hàng mong muốn với ngày hôm nay
+			Date date = dateFormat.parse(deliveryDate.trim());
+			isValid = validateDeliveryDate(date);
+		} catch (ParseException ex) {
+			return false;
+		}
+		return isValid;
 	}
 
 	/**
-	 * Kiểm tra xem tỉnh thành mà khách yêu cầu có support rush order hay không
+	 * Kiểm tra xem nhà cung cấp dịch vụ rush order có hợp lệ hay không
 	 * 
-	 * @param province
-	 * @return true nếu tên tỉnh thành hợp lệ và có support rush order. Nếu không
-	 *         return false
+	 * @param supplier
+	 * @return true nếu tên nhà cung cấp dịch vụ là hợp lệ. Nếu không return false
 	 * @author NAM.LN183956
 	 */
-	public boolean validateProvince(String province) {
+	public boolean validateSupplier(String supplier) {
 		// Kiểm tra tên tỉnh thành có hợp lệ hay không
-		if (Arrays.asList(Configs.PROVINCES).contains(province)) {
-
-			// Nếu có, kiểm tra tỉnh thành đó có support rush order hay không
-//			checkValidateSupport();
+		if (Arrays.asList(Configs.SUPPLIERS).contains(supplier)) {
 			return true;
 		}
 		return false;
 	}
+	
+	private AdditionalFeesInterface additionalFeesCalculator = new AdditionalFeesController();
 
 	/**
 	 * Tính toán phí gia tăng khi đặt đơn hàng rush order
 	 */
 	public int calculateAdditionalFees(Order order) {
-		// Chưa cài đặt, mặc định return 0
-		return 0;
+		return additionalFeesCalculator.calculateAdditionalFees(order);
 	}
-
+	
 }
+

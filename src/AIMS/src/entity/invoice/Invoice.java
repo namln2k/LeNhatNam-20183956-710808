@@ -1,6 +1,7 @@
 package entity.invoice;
 
 import entity.order.Order;
+import entity.shipping.RushInfo;
 
 public class Invoice {
 
@@ -14,11 +15,14 @@ public class Invoice {
     public Invoice(Order order){
         this.order = order;
     }
+    
+    public Invoice(Order order, RushInfo rushInfo) {
+    	this.order = order;
+    }
 
     public Order getOrder() {
         return order;
     }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }

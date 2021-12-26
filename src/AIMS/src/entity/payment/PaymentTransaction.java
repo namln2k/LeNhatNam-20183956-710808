@@ -19,6 +19,10 @@ public class PaymentTransaction {
 		this.createdAt = createdAt;
 	}
 	
+	public PaymentTransaction(String errorCode2, DebitCard card2, String transactionId2, String transactionContent2,
+			int parseInt, String createdAt2) {
+	}
+
 	public String getErrorCode() {
 		return errorCode;
 	}

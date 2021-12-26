@@ -11,6 +11,7 @@ import common.exception.NotEnoughTransactionInfoException;
 import common.exception.SuspiciousTransactionException;
 import common.exception.UnrecognizedException;
 import entity.payment.CreditCard;
+import entity.payment.DebitCard;
 import entity.payment.PaymentTransaction;
 import utils.Configs;
 import utils.MyMap;
@@ -95,6 +96,16 @@ public class InterbankSubsystemController {
 		}
 
 		return trans;
+	}
+
+	public PaymentTransaction payOrder(DebitCard card, int amount, String contents) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public PaymentTransaction refund(DebitCard card, int amount, String contents) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
